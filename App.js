@@ -25,14 +25,14 @@ function ExpensesOverview() {
         tabBarStyle: { backgroundColor: GlobalStyles.colors.primary500 },
         tabBarActiveTintColor: GlobalStyles.colors.accent500,
         tabBarInactiveTintColor: "white",
-        headerRight: ({ tintColor }) =>
+        headerRight: ({ tintColor }) => (
           <IconButton
             icon="add"
             size={24}
             color={tintColor}
             onPress={() => {}}
           />
-        ,
+        ),
       }}
     >
       <BottomTabs.Screen
@@ -53,7 +53,12 @@ function ExpensesOverview() {
           title: "All expenses",
           tabBarLabel: "All",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="calendar" size={size} color={color} />
+            <Ionicons
+              name="calendar"
+              size={24}
+              color={color}
+              onPress={() => {}}
+            />
           ),
         }}
       />

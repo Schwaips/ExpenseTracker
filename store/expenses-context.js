@@ -13,12 +13,14 @@ function expensesReducer(state, action) {
   // return a new state value
   switch (action.type) {
     case "ADD":
-      const id = new Date().toString() + Math.random().toString();
+      // if we build our own id, that will be a problem, since the DB does that for us.
+      // we will use the ID returns by Firebase.
+      
       // action.payload is from dispatch
       return [{ ...action.payload, id: id }, ...state];
     case 'SET':
-
-      return action.payload
+      const inverted = action.payload.reverse()
+      return inverted;
     case "UPDATE":
       // find the index of expense that needs to be updated
       const updatableExpenseIndex = state.findIndex(

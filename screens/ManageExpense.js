@@ -6,8 +6,7 @@ import { GlobalStyles } from "../constants/styles";
 import { ExpensesContext } from "../store/expenses-context";
 
 import ExpenseForm from "../components/ManageExpense/ExpenseForm";
-import { storeExpense } from "../util/http";
-
+import { deleteExpense, storeExpense, updateExpense } from "../util/http";
 
 // to add or edit an expense.
 function ManageExpense({ route, navigation }) {
@@ -19,24 +18,26 @@ function ManageExpense({ route, navigation }) {
   // !! convert to boolean if edited expense id is undefined
   const isEditing = !!editedExpenseId;
 
-  const deleteExpenseHandler = () => {
+  async function deleteExpenseHandler() {
+    await deleteExpense(editedExpenseId);
     expensesContext.deleteExpense(editedExpenseId);
     navigation.goBack();
-  };
+  }
 
   const cancelHandler = () => {
     navigation.goBack();
   };
 
-  const confirmeHandler = (expenseData) => {
+  async function confirmeHandler(expenseData) {
     if (isEditing) {
       expensesContext.updateExpense(editedExpenseId, expenseData);
+      await updateExpense(editedExpenseId, expenseData);
     } else {
-      storeExpense(expenseData);
-      expensesContext.addExpense(expenseData);
+      const id = await storeExpense(expenseData);
+      expensesContext.addExpense({ ...expenseData, id: id });
     }
     navigation.goBack();
-  };
+  }
 
   const selectedExpense = expensesContext.expenses.find(
     (expense) => expense.id === editedExpenseId

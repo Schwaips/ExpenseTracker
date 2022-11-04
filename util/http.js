@@ -3,11 +3,16 @@ import axios from "axios";
 const BACKEND_URL =
   "https://expensetracker-react-nat-5fce1-default-rtdb.europe-west1.firebasedatabase.app/";
 
-export function storeExpense(expenseData) {
+export async function storeExpense(expenseData) {
   // First value : in the url, we got it from firebase. we can extend eg expenses.json here.
   // extansion will be translated as node in DB.
   // Second argument : value that should be send. expenseData (here amount, description and date.)
-  axios.post(BACKEND_URL + "/expenses.json", expenseData);
+  const response = await axios.post(
+    BACKEND_URL + "/expenses.json",
+    expenseData
+  );
+  const id = response.data.name; // name is the equivalent of ID in firebase.
+  return id;
 }
 
 // request to GET all expenses
@@ -24,7 +29,15 @@ export async function fetchExpenses() {
       date: new Date(response.data[key].date), // needs to be converted as date. In Firebase this is string
       description: response.data[key].description,
     };
-    expenses.push(expenseObj)
+    expenses.push(expenseObj);
   }
   return expenses;
+}
+
+export function updateExpense(id, expenseData) {
+  return axios.put(BACKEND_URL + `/expenses/${id}.json`, expenseData)
+}
+
+export function deleteExpense(id) {
+  return axios.delete(BACKEND_URL + `/expenses/${id}.json`)
 }

@@ -3,7 +3,7 @@ import { createContext, useReducer } from "react";
 // will expose a react component
 export const ExpensesContext = createContext({
   expenses: [],
-  setExpenses: ((expenses) => {}),
+  setExpenses: (expenses) => {},
   addExpense: ({ description, amount, date }) => {},
   deleteExpense: (id) => {},
   updateExpense: (id, { description, amount, date }) => {},
@@ -15,9 +15,10 @@ function expensesReducer(state, action) {
     case "ADD":
       // if we build our own id, that will be a problem, since the DB does that for us.
       // we will use the ID returns by Firebase.
-      
+
       // action.payload is from dispatch
-      return [{ ...action.payload, id: id }, ...state];
+      // return [{ ...action.payload, id: id }, ...state];
+      return [action.payload, ...state];
     case 'SET':
       const inverted = action.payload.reverse()
       return inverted;

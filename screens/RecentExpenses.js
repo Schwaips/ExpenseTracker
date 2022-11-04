@@ -1,5 +1,7 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import ExpensesOutput from "../components/Expenses/ExpensesOutput";
+import ErrorOverlay from "../components/ui/ErrorOverlay";
+import LoadingOverlay from "../components/ui/LoadingOverlay";
 import { ExpensesContext } from "../store/expenses-context";
 import { getDateMinusDay } from "../util/date";
 import { fetchExpenses } from "../util/http";
@@ -8,6 +10,10 @@ import { fetchExpenses } from "../util/http";
 // therefore, we need to use context to update accordingly.
 
 function RecentExpenses(params) {
+  // state to manage loading screen
+  const [isFetching, setIsFetching] = useState(true);
+  const [error, setError] = useState();
+
   const expensesContext = useContext(ExpensesContext);
 
   // applies when component is re-render
@@ -16,11 +22,25 @@ function RecentExpenses(params) {
     // it is encourage to create an async function within useEffect()
     // instead of applying async await directly to the fetchExpenses method.
     async function getExpenses() {
-      const expenses = await fetchExpenses(); // yield a promise. that needs to be resolved to pursue.
-      expensesContext.setExpenses(expenses);
+      setIsFetching(true);
+      try {
+        const expenses = await fetchExpenses(); // yield a promise. that needs to be resolved to pursue.
+        expensesContext.setExpenses(expenses);
+      } catch(error) {
+        setError('Could not fetch Expenses!')
+      }
+      setIsFetching(false);
     }
     getExpenses();
   }, []);
+
+  if(error && !isFetching) {
+    return <ErrorOverlay message={error} />
+  }
+
+  if (isFetching) {
+    return <LoadingOverlay />
+  }
 
   const recentExpenses = expensesContext.expenses.filter((expense) => {
     const today = new Date();

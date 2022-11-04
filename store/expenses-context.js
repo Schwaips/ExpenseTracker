@@ -75,7 +75,8 @@ function expensesReducer(state, action) {
       const updatableExpense = state[updatableExpenseIndex];
       // generate new item : we ...updatableExpense takes the existing data of expense.
       // then we merge the new data with ...action.data.payload. We keep original id
-      const updatedItem = { ...updatableExpense, ...action.data.payload };
+      console.log(action.payload)
+      const updatedItem = { ...updatableExpense, ...action.payload.data };
       // we construct a new array spread existing array of state
       const updatedExpenses = [...state];
       //  we access the object that needs to be updated and we make it equal to the new merged data.
@@ -83,9 +84,7 @@ function expensesReducer(state, action) {
       // we return the state that contains the updated data.
       return updatedExpenses;
     case "DELETE":
-      return state.filter((expense) => {
-        expense.id !== action.payload;
-      });
+      return state.filter((expense) => expense.id !== action.payload);
     default:
       return state;
   }

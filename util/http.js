@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const BACKEND_URL =
-  "https://expensetracker-react-nat-5fce1-default-rtdb.europe-west1.firebasedatabase.app/";
+const BACKEND_URL = "http://www.google.com"
 
 export async function storeExpense(expenseData) {
   // First value : in the url, we got it from firebase. we can extend eg expenses.json here.

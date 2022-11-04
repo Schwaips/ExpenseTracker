@@ -16,11 +16,11 @@ function ManageExpense({ route, navigation }) {
   const deleteExpenseHandler = () => {};
 
   const cancelHandler = () => {
-
+    navigation.goBack();
   }
 
   const confirmeHandler = () => {
-
+    navigation.goBack();
   }
 
   useLayoutEffect(() => {

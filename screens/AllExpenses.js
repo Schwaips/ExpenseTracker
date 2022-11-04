@@ -7,7 +7,13 @@ function AllExpenses(params) {
   //not the provider, the context itself needs to be called
   const expensesContext = useContext(ExpensesContext);
 
-  return <ExpensesOutput expenses={expensesContext.expenses} expensesPeriod="Total" />
+  return (
+    <ExpensesOutput
+      expenses={expensesContext.expenses}
+      expensesPeriod="Total"
+      fallBackText="No expenses register"
+    />
+  );
 }
 
 

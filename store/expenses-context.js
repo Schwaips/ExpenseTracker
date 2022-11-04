@@ -1,59 +1,9 @@
 import { createContext, useReducer } from "react";
 
-const DUMMY_EXPENSES = [
-  {
-    id: "e1",
-    description: "A pair of shoes",
-    amount: 100.99,
-    date: new Date("2021-12-19"),
-  },
-  {
-    id: "e2",
-    description: "Computer",
-    amount: 100.99,
-    date: new Date("2021-12-21"),
-  },
-  {
-    id: "e3",
-    description: "Plastique",
-    amount: 200.99,
-    date: new Date("2021-12-30"),
-  },
-  {
-    id: "e4",
-    description: "Bananas",
-    amount: 10.99,
-    date: new Date("2022-11-01"),
-  },
-  {
-    id: "e5",
-    description: "A book",
-    amount: 12.99,
-    date: new Date("2022-11-02"),
-  },
-  {
-    id: "e6",
-    description: "A book",
-    amount: 12.99,
-    date: new Date("2022-11-02"),
-  },
-  {
-    id: "e7",
-    description: "A book",
-    amount: 12.99,
-    date: new Date("2022-11-02"),
-  },
-  {
-    id: "e8",
-    description: "A book",
-    amount: 12.99,
-    date: new Date("2022-11-02"),
-  },
-];
-
 // will expose a react component
 export const ExpensesContext = createContext({
   expenses: [],
+  setExpenses: ((expenses) => {}),
   addExpense: ({ description, amount, date }) => {},
   deleteExpense: (id) => {},
   updateExpense: (id, { description, amount, date }) => {},
@@ -66,6 +16,9 @@ function expensesReducer(state, action) {
       const id = new Date().toString() + Math.random().toString();
       // action.payload is from dispatch
       return [{ ...action.payload, id: id }, ...state];
+    case 'SET':
+
+      return action.payload
     case "UPDATE":
       // find the index of expense that needs to be updated
       const updatableExpenseIndex = state.findIndex(
@@ -75,7 +28,6 @@ function expensesReducer(state, action) {
       const updatableExpense = state[updatableExpenseIndex];
       // generate new item : we ...updatableExpense takes the existing data of expense.
       // then we merge the new data with ...action.data.payload. We keep original id
-      console.log(action.payload)
       const updatedItem = { ...updatableExpense, ...action.payload.data };
       // we construct a new array spread existing array of state
       const updatedExpenses = [...state];
@@ -93,12 +45,16 @@ function expensesReducer(state, action) {
 function ExpensesContextProvider({ children }) {
   // state management logique, usefull if you have complexe management
   // DUMMY EXPENSE here is used as default state.
-  const [expensesState, dispatch] = useReducer(expensesReducer, DUMMY_EXPENSES);
+  const [expensesState, dispatch] = useReducer(expensesReducer, []);
 
   function addExpense(expenseData) {
     // dispatch is provided by useReducer
     // type : because in expense reducer we check the type of action
     dispatch({ type: "ADD", payload: expenseData });
+  }
+
+  function setExpenses(expenses) {
+    dispatch({type: 'SET', payload: expenses})
   }
 
   function deleteExpense(id) {
@@ -112,6 +68,7 @@ function ExpensesContextProvider({ children }) {
   const value = {
     expenses: expensesState,
     addExpense: addExpense,
+    setExpenses: setExpenses,
     deleteExpense: deleteExpense,
     updateExpense: updateExpense,
   };
